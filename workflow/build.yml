@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build and analyze
+    name: Build and Analyze
     runs-on: windows-latest
     
     steps:

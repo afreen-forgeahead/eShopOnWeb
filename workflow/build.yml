@@ -44,7 +44,8 @@ jobs:
         run: |
          dotnet-sonarscanner begin `
             /k:"eShopOnWeb" `
-            /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" `
+            /d:sonar.host.url="https://fa-sonar.forgeahead.io" `
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
-          dotnet build eShopOnWeb.sln  # Ensure this file exists in your repo
-          dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+             dotnet build eShopOnWeb.sln
+             dotnet-sonarscanner end 
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}"

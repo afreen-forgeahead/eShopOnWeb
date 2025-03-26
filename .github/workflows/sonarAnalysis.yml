@@ -7,7 +7,6 @@ on:
 
 jobs:
   build:
-    name: Build and analyze
     runs-on: windows-latest
 
     steps:
@@ -28,20 +27,40 @@ jobs:
           dotnet tool install --global dotnet-sonarscanner
           echo "$HOME/.dotnet/tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: Check dotnet tools (debugging step)
-        shell: pwsh
-        run: dotnet tool list --global
+      - name: Clean build
+        run: dotnet clean eShopOnWeb.sln
 
       - name: Run SonarQube Analysis
         shell: pwsh
         run: |
           $scannerPath = "$HOME/.dotnet/tools/dotnet-sonarscanner"
+          
+          Write-Host "🚀 Starting SonarScanner..."
           & $scannerPath begin `
             /k:"eShopOnWeb" `
             /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" `
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
+            /d:sonar.verbose=true
 
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "❌ SonarScanner begin failed!"
+            exit 1
+          }
+
+          Write-Host "✅ SonarScanner begin successful!"
+          
           dotnet build eShopOnWeb.sln
 
-          & $scannerPath end `
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "❌ Build failed! Stopping analysis."
+            exit 1
+          }
+
+          Write-Host "🚀 Checking for SonarQubeAnalysisConfig.xml..."
+          if (!(Test-Path ".\.sonarqube\conf\SonarQubeAnalysisConfig.xml")) {
+            Write-Error "❌ SonarQube configuration file is missing!"
+            exit 1
+          }
+
+          Write-Host "🚀 Running SonarScanner end..."
+          & $scannerPath end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"

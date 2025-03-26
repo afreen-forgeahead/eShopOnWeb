@@ -1,4 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">	
+<PropertyGroup>
+    <ProjectGuid>{1B692F40-3BCD-47A5-B8D7-EE3F77E46B6F}</ProjectGuid>
+</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Blazored.LocalStorage" />
 		<PackageReference Include="BlazorInputFile" />

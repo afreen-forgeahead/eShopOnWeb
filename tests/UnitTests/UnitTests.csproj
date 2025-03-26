@@ -1,4 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+<PropertyGroup>
+    <ProjectGuid>{9DD8A6B3-8C25-4C2A-8E91-32E159B55768}</ProjectGuid>
+</PropertyGroup>
+
 
   <PropertyGroup>   
     <Nullable>enable</Nullable>
